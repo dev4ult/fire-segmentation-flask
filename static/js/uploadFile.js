@@ -120,21 +120,35 @@ $(document).ready(function (e) {
   });
 
   $('#submit-file').click(function (e) {
+    e.preventDefault();
     $('#next-btn').removeAttr('disabled');
 
     const formData = new FormData($('#form-file-upload')[0]);
 
+    console.log('Segmented Image is Requested!');
+
     $.ajax({
       method: 'POST',
-      url: '/process_image',
+      url: '/',
       data: formData,
       dataType: 'json',
       cache: false,
       contentType: false,
       processData: false,
-      success: function (data) {
-        $('#output-json').html(data.html);
-      },
+      success: function (data) {},
     });
+
+    // $.ajax({
+    //   method: 'POST',
+    //   url: '/process_image',
+    //   data: formData,
+    //   dataType: 'json',
+    //   cache: false,
+    //   contentType: false,
+    //   processData: false,
+    //   success: function (data) {
+    //     $('#output-json').html(data.html);
+    //   },
+    // });
   });
 });

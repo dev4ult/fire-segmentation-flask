@@ -1,11 +1,11 @@
 {% extends "layout.html" %} {% block content %}
-<div class="w-fit mx-auto">
+<div class="w-fit mx-auto py-10 flex gap-10">
   <form id="form-file-upload" action="/settable" method="POST" enctype="multipart/form-data">
     <h2 class="mb-2 text-center">[ Format in jpg, jpeg, png, or webp ]</h2>
     <div id="upload-container" class="p-20 rounded border-2 border-accent border-dashed w-full mx-auto text-accent">
       <div id="drop-file-cmd" class="flex flex-col items-center justify-center gap-2 text-xl font-medium">
         <input type="file" name="file-image" id="upload-file" multiple class="hidden" />
-        <label for="upload-file">Drag and drop Image file here</label>
+        <label for="upload-file">Drag and drop file here</label>
         <span class="text-secondary">or</span>
         <label id="browse-file" for="upload-file" class="btn btn-accent">Browse file</label>
       </div>
@@ -17,12 +17,34 @@
       </div>
     </div>
     <h2 id="error-file" class="hidden text-error text-right mt-2 text-sm">it has to be the right format</h2>
-    <div class="flex gap-4 mt-4">
-      <button type="button" type="submit" id="submit-file" class="btn btn-accent hidden">procceed</button>
-      <button type="button" id="remove-file" class="btn btn-accent btn-outline hidden">remove file</button>
+    <div class="flex flex-col gap-4 mt-4">
+      <button type="button" id="remove-file" class="btn btn-accent btn-outline hidden w-full">remove file</button>
+      <button type="button" type="submit" id="submit-file" class="btn btn-accent hidden w-full">procceed</button>
     </div>
   </form>
+  <div id="image-input" class="hidden">
+    <h2 class="badge badge-accent badge-outline mb-2">Original / Input</h2>
+    <img src="{{ url_for('static', filename='image/no-image.webp') }}" alt="no-image" class="max-w-sm rounded" />
+    <p>Fire Detected <span id="fire-percentage"></span>%</p>
+  </div>
 </div>
-<div id="output-json"></div>
+<div class="text-center">
+  <div class="flex items-center gap-2 text-accent mx-auto w-fit">
+    <p>Image is Processing</p>
+    <span class="loading loading-infinity loading-lg"></span>
+  </div>
+  <p>it may take longer than your expectation</p>
+  <p class="mt-1 text-sm text-success">(Estimation : 4 - 5 Minutes)</p>
+</div>
+<div id="output" class="py-10 border-t-2 border-accent flex gap-10">
+  <div>
+    <h2 class="badge badge-accent badge-outline mb-2">Segmented / Output</h2>
+    <img src="{{ url_for('static', filename='image/no-image.webp') }}" alt="no-image" class="max-w-sm rounded" />
+  </div>
+  <div>
+    <h2 class="badge badge-accent mb-2">Additional Information</h2>
+    <div class="p-5 border-2 border-accent mb-2 rounded">test</div>
+  </div>
+</div>
 <script src="{{ url_for('static', filename='js/uploadFile.js' )}}"></script>
 {% endblock %}

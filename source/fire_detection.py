@@ -17,14 +17,20 @@ def detect_fire(file):
     data = file.read()
 
     response = requests.post(API_URL, headers=headers, data=data)
-    output_json = response.json()
 
-    for i, data in enumerate(output_json):
-        if data["label"] == "Fire":
-            fireScore = output_json[i]["score"]
-        if data["label"] == "Normal":
-            normalScore = output_json[i]["score"]
-        if data["label"] == "Smoke":
-            smokeScore = output_json[i]["score"]
+    fireScore = 0
+    normalScore = 0
+    smokeScore = 0
+
+    if response.status_code == 200:
+        output_json = response.json()
+
+        for i, data in enumerate(output_json):
+            if data["label"] == "Fire":
+                fireScore = output_json[i]["score"]
+            if data["label"] == "Normal":
+                normalScore = output_json[i]["score"]
+            if data["label"] == "Smoke":
+                smokeScore = output_json[i]["score"]
 
     return [fireScore, normalScore, smokeScore]

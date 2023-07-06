@@ -1,13 +1,21 @@
 from flask import Flask, render_template, request, jsonify
 from source.fire_detection import detect_fire
 from source.handle_image import get_uri, read_image, open_image, UMatToPIL
-from source.fire_segmentation import combinate_hsv_threshold
+from source.fire_segmentation import merged
 
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
+    if request.method == "POST":
+        file = request.files["file-image"]
+
+        if file:
+            output = detect_fire(file)
+            return jsonify(
+                {"image_uri": get_uri(open_image(file)), "fire_percentage": output[0]}
+            )
     return render_template("index.html")
 
 
@@ -17,18 +25,13 @@ def process():
         file = request.files["file-image"]
 
         if file:
-            output = detect_fire(file)
+            # output = detect_fire(file)
 
             return jsonify(
                 {
                     "html": render_template(
                         "firepercentage.html",
-                        converted=get_uri(
-                            UMatToPIL(combinate_hsv_threshold(read_image(file)))
-                        ),
-                        firescore=output[0],
-                        normalscore=output[1],
-                        smokescore=output[2],
+                        converted=get_uri(UMatToPIL(merged(read_image(file)))),
                     )
                 }
             )

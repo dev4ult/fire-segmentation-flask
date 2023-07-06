@@ -59,7 +59,7 @@ def contour(image):
     return contour_image
 
 
-def open_morphology(image):
+def morp_opened(image):
     # panggil method combinate_grayscale_threshold
     grayscale_threshold = combinate_grayscale_threshold(image)
 
@@ -74,35 +74,39 @@ def open_morphology(image):
     return opening
 
 
-def distance_transform(image):
+def dist_transformed(image):
     # panggil method morphologi_terbuka
-    morfologi = open_morphology(image)
+    morfologi = morp_opened(image)
 
     # Sure foreground area
-    dist_transform = cv2.distanceTransform(morfologi, cv2.DIST_L2, 5)
-    ret, sure_fg = cv2.threshold(dist_transform, 0.01 * dist_transform.max(), 255, 0)
+    # dist_transform = cv2.distanceTransform(morfologi, cv2.DIST_L2, 5)
+    # dt_np = dist_transform.get()
+    # threshold_value = 0.01 * dt_np.max()
+    # ret, sure_fg = cv2.threshold(dt_np, threshold_value, 255, 0)
 
-    sure_bg = cv2.subtract(morfologi, sure_fg.astype(np.uint8))
+    # sure_bg = cv2.subtract(morfologi, sure_fg.astype(np.uint8))
 
     # Finding unknown region
-    sure_fg = np.uint8(sure_fg)
-    unknown = cv2.subtract(sure_bg, sure_fg)
+    # sure_fg = np.uint8(sure_fg)
+    # unknown = cv2.subtract(sure_bg, sure_fg)
 
     # panggil method combinate_grayscale_threshold
-    thresholded_image = combinate_grayscale_threshold(image)
+    # thresholded_image = combinate_grayscale_threshold(image)
 
     # Perform distance transform on the binary image
-    distance_transform = cv2.distanceTransform(thresholded_image, cv2.DIST_L2, 3)
+    distance_transform = cv2.distanceTransform(morfologi, cv2.DIST_L2, 3)
 
     return distance_transform
 
 
-def segmentasi_watershed(image):
+def watershed_segmentation(image):
     # panggil method transformasi_jarak
-    distance_transform = distance_transform(image)
+
+    image_np = image.get()
+    distance_transform = dist_transformed(image_np)
 
     # panggil method combinate_grayscale_threshold
-    thresholded_image = combinate_grayscale_threshold(image)
+    thresholded_image = combinate_grayscale_threshold(image_np)
 
     # Find peaks in the distance transform
     # coordinates = peak_local_max(distance_transform, min_distance=9, labels=thresholded_image)
@@ -122,8 +126,10 @@ def segmentasi_watershed(image):
     # Tentukan rentang warna dari merah ke biru
     color_map = cm.get_cmap("cool")
 
+    image_shape = image_np.shape
+
     # Assign warna ke setiap piksel segmentasi berdasarkan jarak transformasi
-    segmentation_color = np.zeros(image.shape, dtype=np.uint8)
+    segmentation_color = np.zeros(image_shape, dtype=np.uint8)
     for i in range(np.max(labels)):
         color = color_map(i / np.max(labels))[:3]  # Ambil komponen RGB dari colormap
         color = tuple(int(c * 255) for c in color)  # Konversi nilai 0-1 ke 0-255
@@ -144,7 +150,7 @@ def segmentasi_watershed(image):
 
 def merged(image):
     # panggil method segmentasi_watershed
-    segmentation_color = segmentasi_watershed(image)
+    segmentation_color = watershed_segmentation(image)
 
     # panggil method segmentasi_watershed
     image_contour = contour(image)
