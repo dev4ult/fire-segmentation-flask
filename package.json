@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tailwindcss -i ./source/input.css -o ./static/css/styles.css --watch",
+    "minify": "npx tailwindcss -i ./source/input.css -o ./static/css/styles.css --minify",
     "app": "python app.py"
   },
   "keywords": [],
