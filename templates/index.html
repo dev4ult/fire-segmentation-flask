@@ -1,3 +1,28 @@
 {% extends "layout.html" %} {% block content %}
-<div>Test</div>
+<div class="w-fit mx-auto">
+  <form id="form-file-upload" action="/settable" method="POST" enctype="multipart/form-data">
+    <h2 class="mb-2 text-center">[ Format in jpg, jpeg, png, or webp ]</h2>
+    <div id="upload-container" class="p-20 rounded border-2 border-accent border-dashed w-full mx-auto text-accent">
+      <div id="drop-file-cmd" class="flex flex-col items-center justify-center gap-2 text-xl font-medium">
+        <input type="file" name="file-image" id="upload-file" multiple class="hidden" />
+        <label for="upload-file">Drag and drop Image file here</label>
+        <span class="text-secondary">or</span>
+        <label id="browse-file" for="upload-file" class="btn btn-accent">Browse file</label>
+      </div>
+      <div id="file-info" class="flex items-center justify-center flex-col">
+        <img id="jpg-icon" src="{{ url_for('static', filename='icon/jpg.svg') }}" alt="jpg icon" class="hidden" />
+        <img id="webp-icon" src="{{ url_for('static', filename='icon/webp.svg') }}" alt="webp icon" class="hidden" />
+        <img id="png-icon" src="{{ url_for('static', filename='icon/png.svg') }}" alt="png icon" class="hidden" />
+        <p id="file-name" class="mt-1 text-lg text-neutral font-semibold"></p>
+      </div>
+    </div>
+    <h2 id="error-file" class="hidden text-error text-right mt-2 text-sm">it has to be the right format</h2>
+    <div class="flex gap-4 mt-4">
+      <button type="button" type="submit" id="submit-file" class="btn btn-accent hidden">procceed</button>
+      <button type="button" id="remove-file" class="btn btn-accent btn-outline hidden">remove file</button>
+    </div>
+  </form>
+</div>
+<div id="output-json"></div>
+<script src="{{ url_for('static', filename='js/uploadFile.js' )}}"></script>
 {% endblock %}

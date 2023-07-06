@@ -5,7 +5,11 @@ module.exports = {
     themes: ['business'],
   },
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        spacemono: ['Space Mono', 'sans-serif'],
+      },
+    },
   },
   plugins: [require('daisyui')],
 };
