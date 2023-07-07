@@ -141,11 +141,11 @@ $(document).ready(function (e) {
         $('#image-input').removeClass('hidden');
         $('#original-fire-image').attr('src', data.image_uri);
         if (data.fire_percentage < 0.1) {
-          $('#fire-percentage').append('below 10%');
+          $('#fire-percentage').html('below 10%');
           $('#warning-msg').removeClass('hidden');
           $('#fire-percentage').addClass('text-error');
         } else {
-          $('#fire-percentage').append(`${parseInt(data.fire_percentage * 100)}%`);
+          $('#fire-percentage').html(`${parseInt(data.fire_percentage * 100)}%`);
           $('#procceed-btn').removeClass('hidden');
         }
       },
