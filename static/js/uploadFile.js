@@ -125,7 +125,9 @@ $(document).ready(function (e) {
 
     const formData = new FormData($('#form-file-upload')[0]);
 
-    console.log('Segmented Image is Requested!');
+    $('#loading-setup').removeClass('hidden');
+
+    $('#image-input').addClass('hidden');
 
     $.ajax({
       method: 'POST',
@@ -135,20 +137,46 @@ $(document).ready(function (e) {
       cache: false,
       contentType: false,
       processData: false,
-      success: function (data) {},
+      success: function (data) {
+        $('#image-input').removeClass('hidden');
+        $('#original-fire-image').attr('src', data.image_uri);
+        if (data.fire_percentage < 0.1) {
+          $('#fire-percentage').append('below 10%');
+          $('#warning-msg').removeClass('hidden');
+          $('#fire-percentage').addClass('text-error');
+        } else {
+          $('#fire-percentage').append(`${parseInt(data.fire_percentage * 100)}%`);
+          $('#procceed-btn').removeClass('hidden');
+        }
+      },
+      complete: function () {
+        $('#loading-setup').addClass('hidden');
+      },
     });
+  });
 
-    // $.ajax({
-    //   method: 'POST',
-    //   url: '/process_image',
-    //   data: formData,
-    //   dataType: 'json',
-    //   cache: false,
-    //   contentType: false,
-    //   processData: false,
-    //   success: function (data) {
-    //     $('#output-json').html(data.html);
-    //   },
-    // });
+  $('.procceed-btn').click(function (e) {
+    const formData = new FormData($('#form-file-upload')[0]);
+
+    $('#output').addClass('hidden');
+
+    $('#loading-proccess').removeClass('hidden');
+
+    $.ajax({
+      method: 'POST',
+      url: '/process_image',
+      data: formData,
+      dataType: 'json',
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $('#output').removeClass('hidden');
+        $('#output-image').attr('src', data.image_uri);
+      },
+      complete: function () {
+        $('#loading-proccess').addClass('hidden');
+      },
+    });
   });
 });

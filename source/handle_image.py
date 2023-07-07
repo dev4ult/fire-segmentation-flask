@@ -20,6 +20,7 @@ def UMatToPIL(image):
 
 def get_uri(image):
     image_data = image
+    image_data = image_data.convert("RGB")
     data = io.BytesIO()
     image_data.save(data, "JPEG")
 

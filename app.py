@@ -25,16 +25,7 @@ def process():
         file = request.files["file-image"]
 
         if file:
-            # output = detect_fire(file)
-
-            return jsonify(
-                {
-                    "html": render_template(
-                        "firepercentage.html",
-                        converted=get_uri(UMatToPIL(merged(read_image(file)))),
-                    )
-                }
-            )
+            return jsonify({"image_uri": get_uri(UMatToPIL(merged(read_image(file))))})
 
 
 @app.route("/example")

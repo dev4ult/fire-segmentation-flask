@@ -102,7 +102,7 @@ def dist_transformed(image):
 def watershed_segmentation(image):
     # panggil method transformasi_jarak
 
-    image_np = image.get()
+    image_np = cv2.UMat.get(image)
     distance_transform = dist_transformed(image_np)
 
     # panggil method combinate_grayscale_threshold
@@ -129,14 +129,17 @@ def watershed_segmentation(image):
     image_shape = image_np.shape
 
     # Assign warna ke setiap piksel segmentasi berdasarkan jarak transformasi
-    segmentation_color = np.zeros(image_shape, dtype=np.uint8)
+    segmentation_color = np.zeros((image_shape[0], image_shape[1], 3), dtype=np.uint8)
     for i in range(np.max(labels)):
         color = color_map(i / np.max(labels))[:3]  # Ambil komponen RGB dari colormap
         color = tuple(int(c * 255) for c in color)  # Konversi nilai 0-1 ke 0-255
         x, y = np.where(
             labels == i + 1
         )  # Dapatkan koordinat piksel dengan label yang sesuai
-        segmentation_color[x, y] = color
+        if len(x) > 0 and len(y) > 0:
+            x = np.array(x)
+            y = np.array(y)
+            segmentation_color[x, y, :] = color
 
     # Berikan warna pada latar belakang
     background_color = (188, 159, 42)  # Warna kuning untuk latar belakang (format BGR)
